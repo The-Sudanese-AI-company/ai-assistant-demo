@@ -51,18 +51,19 @@ def clean_source_name(doc):
     return raw_source.replace("\\", "/").split("/")[-1]   # keep only the file name, drop the folders
 
 def ask_question(user_question, chat_history, show_details=False):
-    """Rewrite (if needed), retrieve, and answer — grounded in the docs."""
-    
-    # Convert chat history from dict format to LangChain message objects
+    # Breadcrumb A: the request made it into our function
+    print("STEP A: question received", flush=True)
+
     messages = []
     for msg in chat_history:
         if msg["role"] == "user":
             messages.append(HumanMessage(content=msg["content"]))
         elif msg["role"] == "assistant":
             messages.append(AIMessage(content=msg["content"]))
-    
-    # Step 1: rewrite the question to be standalone if we have context.
+
     if messages:
+        # Breadcrumb B: about to call Gemini to rewrite the question
+        print("STEP B: rewriting question with Gemini...", flush=True)
         rewrite_messages = [
             SystemMessage(
                 content="Given the chat history, rewrite the new question to be standalone and searchable. Just return the rewritten question."
@@ -77,7 +78,11 @@ def ask_question(user_question, chat_history, show_details=False):
     # Step 2: retrieve the most relevant documents.
     retriever = db.as_retriever(search_type="similarity",
                                 search_kwargs={"k": RETRIEVER_K})
+      print("STEP C: searching the document database...", flush=True)
     docs = retriever.invoke(search_question)
+
+    # Breadcrumb D: search done, about to ask Gemini for the final answer
+    print(f"STEP D: found {len(docs)} chunks, asking Gemini...", flush=True)
     
     # Prepare retrieval details
     retrieval_details = None
