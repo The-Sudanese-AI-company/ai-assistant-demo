@@ -140,6 +140,7 @@ def chat():
         response = ask_question(user_question, chat_history, show_details)
         return jsonify(response)
     except Exception as e:
+        print("ERROR:", e, flush=True)
         return jsonify({"error": str(e)}), 500
 
 
