@@ -1,10 +1,10 @@
-flask
-flask-cors
+flask==3.0.3
+flask-cors ==4.0.0
 gunicorn
-python-dotenv
-langchain-chroma
-langchain-core
-langchain-google-genai
-langchain-voyageai
-langchain-community
-langchain-text-splitters
+python-dotenv ==1.2.2
+langchain-chroma == 1.1.0
+langchain-core == 1.4.9
+langchain-google-genai ==4.2.6
+langchain-voyageai ==0.4.0
+langchain-community ==0.4.2
+langchain-text-splitters==1.1.2
