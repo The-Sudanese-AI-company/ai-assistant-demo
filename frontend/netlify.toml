@@ -1,0 +1,18 @@
+# netlify.toml
+# This file tells Netlify how to build your React frontend.
+# Put it in the root of the frontend part of your repo.
+
+[build]
+<<<<<<< HEAD
+=======
+  base = "frontend"            # netlify.toml lives inside the frontend folder, but "base" is resolved from the repo root, not from this file's location
+>>>>>>> c027c2749c9f302e386521296ba13cc5b11746c2
+  command = "npm run build"   # build the React app into plain static files
+  publish = "build"           # Create React App puts the finished site in the "build" folder
+
+# The next block makes page refreshes work for a single-page React app.
+# Without it, reloading any page except the home page can show a "Not Found" error.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

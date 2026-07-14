@@ -1,0 +1,17 @@
+# Local Netlify folder
+.netlify
+
+node_modules/
+dist/
+build/
+
+# Ignore Python virtual environments
+venv/
+.venv/
+env/
+__pycache__/
+*.pyc
+
+# Ignore secret environment variables
+.env
+.env.local

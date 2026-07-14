@@ -1,0 +1,1366 @@
+/* Saudi Water Authority - Official dark theme */
+:root {
+  /* Primary Colors - Saudi Green */
+  --green-50: #e8f5ed;
+  --green-100: #d0ebd9;
+  --green-200: #a1d6b3;
+  --green-300: #72c28d;
+  --green-400: #43ad67;
+  --green-500: #1a6b3c;
+  --green-600: #155a32;
+  --green-700: #104a28;
+  --green-800: #0c3a1f;
+  --green-900: #072a15;
+  
+  /* Secondary - Tech Blue */
+  --blue-50: #e6f0fa;
+  --blue-100: #cce1f5;
+  --blue-200: #99c3eb;
+  --blue-300: #66a4e1;
+  --blue-400: #3386d7;
+  --blue-500: #0050b3;
+  --blue-600: #00408f;
+  --blue-700: #00306b;
+  --blue-800: #002047;
+  --blue-900: #001023;
+  
+  /* Accent - Gold */
+  --gold-50: #f8f3e6;
+  --gold-100: #f1e7cc;
+  --gold-200: #e3cf99;
+  --gold-300: #d5b766;
+  --gold-400: #c7a033;
+  --gold-500: #c9a84c;
+  --gold-600: #b08d35;
+  --gold-700: #8a6e29;
+  --gold-800: #644f1e;
+  --gold-900: #3e3012;
+
+  /* These three exist ONLY for colored text that sits directly on the
+     dark page background (like a small status label). The regular
+     green-600 / gold-600 / blue-500 above are tuned to look good as
+     BUTTON or BADGE fills with white text on top of them - which makes
+     them too dark to read as plain text against our near-black page.
+     These brighter versions solve that, without disturbing every other
+     place the darker shades are already working correctly. */
+  --green-text-accent: #4ade80;
+  --gold-text-accent: #e0c27a;
+  --blue-text-accent: #7fb2e5;
+
+  /* A soft, translucent wash of the bright green above, used for small
+     "highlighted" backgrounds (like the status pill, or a hovered row).
+     Because it's translucent (the "0.12" at the end means 12% visible)
+     it automatically sits nicely on top of the dark page colour instead
+     of us having to hand-pick one exact dark-green hex value. */
+  --green-tint-bg: rgba(74, 222, 128, 0.12);
+  
+  /* Neutrals - this ramp is now REVERSED from the original file:
+     gray-50 used to be the lightest shade (an off-white page background)
+     and gray-900 used to be the darkest (near-black text). Since every
+     other rule in this file just says "use gray-50" or "use gray-900"
+     without caring what those actually equal, flipping the values here
+     is enough to turn the whole app dark - nothing else needs editing. */
+  --gray-50: #121212;
+  --gray-100: #1b1b1b;
+  --gray-200: #2b2b2b;
+  --gray-300: #383838;
+  --gray-400: #52525b;
+  --gray-500: #8a8a8f;
+  --gray-600: #a3a3a8;
+  --gray-700: #c4c4c9;
+  --gray-800: #e4e4e7;
+  --gray-900: #f5f5f5;
+  
+  /* Shadows - kept subtle since a dark surface doesn't need much extra
+     shadow to feel "raised" the way a white surface does */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.25);
+  --shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.35);
+  --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.4);
+  
+  /* Border Radius */
+  --radius-sm: 6px;
+  --radius: 10px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
+  --radius-full: 9999px;
+  
+  /* Transitions */
+  --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --sidebar-width: 300px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background: var(--gray-50);
+  color: var(--gray-900);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--gray-300);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--gray-400);
+}
+
+/* App Layout - Single column with sidebar */
+.app {
+  display: flex;
+  height: 100vh;
+  background: var(--gray-100);
+  overflow: hidden;
+}
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background: var(--gray-50);
+}
+
+/* Header */
+.chat-header {
+  padding: 12px 20px;
+  background: var(--gray-100);
+  border-bottom: 1px solid var(--gray-200);
+  flex-shrink: 0;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 100%;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.menu-button {
+  background: none;
+  border: none;
+  color: var(--gray-600);
+  cursor: pointer;
+  padding: 6px;
+  border-radius: var(--radius-sm);
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.menu-button:hover {
+  background: var(--gray-100);
+  color: var(--gray-900);
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-icon {
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(135deg, var(--green-500), var(--blue-500));
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: white;
+}
+
+.logo-container h1 {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--gray-900);
+}
+
+.logo-container .subtitle {
+  font-size: 12px;
+  color: var(--gray-500);
+  font-weight: 400;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Two small pill buttons side by side (EN / AR). The "active" one gets
+   a visible border and brighter text so it's obvious which language is
+   currently selected - the other one stays muted. */
+.language-toggle {
+  display: flex;
+  gap: 4px;
+  padding: 3px;
+  background: var(--gray-100);
+  border-radius: var(--radius-full);
+}
+
+.language-toggle button {
+  padding: 4px 12px;
+  border: none;
+  background: transparent;
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--gray-500);
+  cursor: pointer;
+  transition: var(--transition);
+  font-family: inherit;
+}
+
+.language-toggle button.active {
+  background: var(--gray-200);
+  color: var(--gray-900);
+}
+
+.language-toggle button:hover:not(.active) {
+  color: var(--gray-700);
+}
+
+.status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  background: var(--green-tint-bg);
+  border-radius: var(--radius-full);
+}
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--green-500);
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.85); }
+}
+
+.status-text {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--green-text-accent);
+}
+
+/* ============================================ */
+/* SPLIT LAYOUT - the chat on one side, sources on the other           */
+/* ============================================ */
+/* "split-layout" is the big outer box. It holds two boxes side by     */
+/* side: "chat-column" (the conversation) and "evidence-column" (the   */
+/* sources panel, which now stays on screen instead of only showing up */
+/* under a single answer). Think of it like a book laid open: the left */
+/* page is the conversation, the right page is the footnotes, and you  */
+/* can see both at the same time without flipping pages.               */
+.split-layout {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  gap: 1px;
+  max-width: 1300px;
+  margin: 0 auto;
+  width: 100%;
+  padding:0 0 20px 20px;
+  min-height: 0;
+}
+
+/* The chat column behaves exactly like the old .chat-container did -
+   it stretches to fill whatever space is left over ("flex: 1") after
+   the evidence column takes its fixed width. */
+.chat-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;  
+  
+}
+
+/* The evidence column has a fixed width instead of "flex: 1", so it
+   stays a steady, readable size no matter how wide the window gets.
+   "flex-shrink: 0" stops it from getting squeezed by the chat column. */
+.evidence-column {
+  width: 330px;
+  flex-shrink: 0;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 20px 0 20px 20px;
+  border-left: 1px solid var(--gray-200);
+}
+
+.messages-wrapper {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 0  10px;
+  justify-content: center;
+ 
+}
+
+.messages {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Message Wrapper - for copy button */
+.message-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-width: 95%;
+}
+
+.message-wrapper.user {
+  align-self: flex-end;
+}
+
+.message-wrapper.assistant {
+  align-self: flex-start;
+}
+
+/* Copy Button */
+.copy-button {
+  align-self: flex-end;
+  padding: 4px 12px;
+  background: transparent;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  color: var(--gray-500);
+  cursor: pointer;
+  transition: var(--transition);
+  font-family: inherit;
+  opacity: 0;
+  transition: opacity 0.2s, background 0.2s, color 0.2s;
+}
+
+.message-wrapper:hover .copy-button {
+  opacity: 1;
+}
+
+.copy-button:hover {
+  background: var(--gray-100);
+  color: var(--gray-700);
+}
+
+.copy-button.copied {
+  background: var(--green-500);
+  color: white;
+  border-color: var(--green-500);
+  opacity: 1;
+}
+
+/* Messages */
+.message {
+  display: flex;
+  gap: 12px;
+  max-width: 100%;
+  animation: slideIn 0.2s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.message.user {
+  flex-direction: row-reverse;
+}
+
+.message.assistant {
+  flex-direction: row;
+}
+
+.message-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.message.user .message-avatar {
+  background: linear-gradient(135deg, var(--green-500), var(--green-600));
+  color: white;
+}
+
+.message.assistant .message-avatar {
+  background: linear-gradient(135deg, var(--blue-500), var(--blue-600));
+  color: white;
+}
+
+.message-content {
+  background: var(--gray-100);
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  line-height: 1.7;
+  word-wrap: break-word;
+  font-size: 14px;
+  color: var(--gray-800);
+  border: 1px solid var(--gray-200);
+  flex: 1;
+}
+
+.message.user .message-content {
+  background: linear-gradient(135deg, var(--green-500), var(--green-600));
+  color: white;
+  border: none;
+}
+
+.message-content p {
+  margin: 0;
+}
+
+.message-content p + p {
+  margin-top: 6px;
+}
+
+.message-content ul, 
+.message-content ol {
+  margin: 6px 0;
+  
+  padding-inline-start: 18px;
+}
+
+.message-content code {
+  background: var(--gray-100);
+  padding: 1px 5px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+}
+
+.message.user .message-content code {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  max-width: 460px;
+  margin: 0 auto;
+}
+
+.empty-state-icon {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, var(--green-50), var(--blue-50));
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--green-500);
+  margin: 0 auto 16px;
+}
+
+.empty-state h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--gray-800);
+  margin-bottom: 6px;
+}
+
+.empty-state p {
+  color: var(--gray-500);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.suggestion-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.suggestion-chips button {
+  padding: 8px 18px;
+  background: var(--gray-100);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-full);
+  font-size: 13px;
+  color: var(--gray-700);
+  cursor: pointer;
+  transition: var(--transition);
+  font-family: inherit;
+}
+
+.suggestion-chips button:hover {
+  background: var(--green-tint-bg);
+  border-color: var(--green-300);
+  color: var(--green-text-accent);
+}
+
+/* Typing Indicator */
+.typing-indicator {
+  display: flex;
+  gap: 4px;
+  padding: 2px 0;
+}
+
+.typing-indicator span {
+  width: 6px;
+  height: 6px;
+  background: var(--gray-400);
+  border-radius: 50%;
+  animation: typingBounce 1.4s infinite;
+}
+
+.typing-indicator span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.typing-indicator span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes typingBounce {
+  0%, 60%, 100% {
+    transform: translateY(0);
+    opacity: 0.3;
+  }
+  30% {
+    transform: translateY(-5px);
+    opacity: 1;
+  }
+}
+
+/* Input Form */
+.input-form {
+  padding: 0 20px 16px 0;
+  flex-shrink: 0;
+}
+
+.input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--gray-100);
+  border-radius: var(--radius-full);
+  padding: 4px 4px 4px 16px;
+  border: 1px solid var(--gray-300);
+  transition: var(--transition);
+}
+
+.input-wrapper:focus-within {
+  border-color: var(--green-400);
+  box-shadow: 0 0 0 3px var(--green-50);
+}
+
+.chat-input {
+  flex: 1;
+  padding: 10px 0;
+  border: none;
+  font-size: 14px;
+  outline: none;
+  background: transparent;
+  font-family: inherit;
+  color: var(--gray-800);
+  min-height: 20px;
+}
+
+.chat-input::placeholder {
+  color: var(--gray-400);
+}
+
+.chat-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.send-button {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, var(--green-500), var(--blue-500));
+  color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.send-button:hover:not(:disabled) {
+  transform: scale(1.03);
+  box-shadow: 0 4px 12px rgba(26, 107, 60, 0.3);
+}
+
+.send-button:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+.send-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.send-button svg {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+}
+
+.input-footer {
+  text-align: center;
+  margin-top: 8px;
+  font-size: 11px;
+  color: var(--gray-400);
+}
+
+/* Sidebar */
+.sidebar {
+  width: var(--sidebar-width);
+  height: 100vh;
+  background: var(--gray-50);
+  border-right: 1px solid var(--gray-200);
+  display: flex;
+  flex-direction: column;
+  transition: var(--transition);
+  overflow: hidden;
+  flex-shrink: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  transform: translateX(0);
+}
+
+.sidebar.closed {
+  transform: translateX(-100%);
+}
+
+.sidebar-header {
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid var(--gray-200);
+  flex-shrink: 0;
+  background: linear-gradient(135deg, var(--green-500), var(--blue-500));
+}
+
+.sidebar-header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sidebar-logo-icon {
+  width: 32px;
+  height: 32px;
+  background:white;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--green-500);
+}
+
+.sidebar-logo span {
+  font-size: 16px;
+  font-weight: 600;
+  color: white;
+}
+
+.sidebar-close-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: var(--radius-sm);
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sidebar-close-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.sidebar-description {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.5;
+}
+
+.sidebar-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.sidebar-section-title {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--gray-500);
+  margin-bottom: 4px;
+}
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  background: var(--gray-100);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--gray-200);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.sidebar-item:hover {
+  border-color: var(--green-300);
+  background: var(--green-tint-bg);
+}
+.sidebar-toggle-desktop{
+  background:var(--gray-700);
+}
+.sidebar-toggle-desktop svg{
+  background: var(--green-700);
+}
+
+.sidebar-item-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--gray-700);
+}
+
+.toggle-switch {
+  position: relative;
+  width: 36px;
+  height: 20px;
+  background: var(--gray-300);
+  border-radius: 10px;
+  transition: var(--transition);
+  flex-shrink: 0;
+}
+
+.toggle-switch.active {
+  background: var(--green-500);
+}
+
+.toggle-switch .toggle-knob {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  background: white;
+  border-radius: 50%;
+  transition: var(--transition);
+  box-shadow: var(--shadow-sm);
+}
+
+.toggle-switch.active .toggle-knob {
+  transform: translateX(16px);
+}
+
+.sidebar-action-btn {
+  padding: 10px 14px;
+  background: var(--gray-100);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--gray-700);
+  transition: var(--transition);
+  font-family: inherit;
+  width: 100%;
+  text-align: left;
+}
+
+.sidebar-action-btn:hover {
+  background: rgba(248, 113, 113, 0.12);
+  border-color: #b45151;
+  color: #f87171;
+}
+
+.sidebar-footer {
+  padding: 16px 20px;
+  border-top: 1px solid var(--gray-200);
+  flex-shrink: 0;
+  background: var(--gray-50);
+}
+
+.sidebar-footer-item {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--gray-500);
+  padding: 2px 0;
+}
+
+.sidebar-footer-item code {
+  background: var(--gray-200);
+  padding: 1px 8px;
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  color: var(--gray-600);
+}
+
+/* Sidebar Overlay (mobile) */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 99;
+}
+
+.sidebar-overlay.show {
+  display: block;
+}
+
+/* Evidence Pane Component Styles */
+.evidence-pane {
+  background: var(--gray-100);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  margin-top: 8px;
+}
+
+.evidence-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.evidence-header h4 {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gray-700);
+}
+
+.evidence-header .badge {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--gray-500);
+  background: var(--gray-100);
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+}
+
+.evidence-item {
+  background: var(--gray-50);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  border-left: 3px solid var(--gold-500);
+}
+
+.evidence-item:last-child {
+  margin-bottom: 0;
+}
+
+.evidence-item .source-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--gold-text-accent);
+  margin-bottom: 2px;
+}
+
+.evidence-item .content {
+  font-size: 13px;
+  color: var(--gray-700);
+  line-height: 1.6;
+}
+
+.evidence-item .doc-link {
+  display: inline-block;
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--blue-text-accent);
+  text-decoration: none;
+}
+
+.evidence-item .doc-link:hover {
+  text-decoration: underline;
+}
+
+.evidence-query {
+  margin-top: 10px;
+  padding: 8px 12px;
+  background: var(--gray-50);
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  color: var(--gray-500);
+  border: 1px solid var(--gray-200);
+}
+
+.evidence-query strong {
+  color: var(--gray-600);
+}
+
+/* Shown in the evidence column before any question has been asked yet,
+   or while we're waiting for an answer. Keeps the column from looking
+   like something is broken or missing. */
+.evidence-pane-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.evidence-empty-text {
+  font-size: 13px;
+  color: var(--gray-500);
+  line-height: 1.6;
+}
+
+/* The single, prominent "which topic did this answer come from" line,
+   e.g. "New connections > Requesting a new water connection". Shown
+   once per answer, above the list of source files. */
+.evidence-section-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--green-text-accent);
+  margin-bottom: 14px;
+}
+
+.evidence-section-label svg {
+  flex-shrink: 0;
+}
+
+.evidence-sources-title {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--gray-500);
+  margin-bottom: 8px;
+}
+
+/* The row of small filename tags, e.g. "new_connections.md". Wraps onto
+   a new line by itself if there isn't room for all of them side by
+   side. */
+.source-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.source-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  padding: 6px 12px;
+  border-radius: var(--radius);
+  border: 1px solid var(--gray-200);
+  color: var(--gray-600);
+}
+
+.source-chip svg {
+  flex-shrink: 0;
+  color: var(--gray-500);
+}
+
+/* ============================================ */
+/* RESPONSIVE DESIGN */
+/* ============================================ */
+
+/* Tablets and small laptops */
+@media (max-width: 1024px) {
+  /* Not enough width for two side-by-side columns anymore, so stack
+     them instead: chat on top, sources underneath. */
+  .split-layout {
+    flex-direction: column;
+    max-width: 100%;
+    padding: 0 16px;
+  }
+
+  /* Now that it's stacked instead of side-by-side, the sources column
+     should use the full width and separate with a line on TOP instead
+     of on the LEFT. Capping its height keeps a long source list from
+     pushing the chat input off the bottom of the screen. */
+  .evidence-column {
+    width: 100%;
+    max-height: 320px;
+    border-left: none;
+    border-top: 1px solid var(--gray-200);
+    padding: 16px 0 0 0;
+  }
+  
+  .message-wrapper {
+    max-width: 90%;
+  }
+  
+}
+
+/* Mobile devices */
+@media (max-width: 768px) {
+  /* Show hamburger menu on mobile */
+  .menu-button {
+    display: flex;
+  }
+  
+  /* Sidebar slides from left */
+  .sidebar {
+    width: 280px;
+    transform: translateX(-100%);
+  }
+  
+  .sidebar.open {
+    transform: translateX(0);
+  }
+  
+  /* Overlay for mobile */
+  .sidebar-overlay.show {
+    display: block;
+  }
+  
+  /* Header adjustments */
+  .chat-header {
+    padding: 10px 14px;
+  }
+  
+  .logo-container h1 {
+    font-size: 15px;
+  }
+  
+  .logo-container .subtitle {
+    font-size: 11px;
+  }
+  
+  .status-text {
+    display: none;
+  }
+  
+  .status-indicator {
+    padding: 4px 8px;
+  }
+  
+  /* Chat container */
+  .split-layout {
+    padding: 0 12px;
+  }
+  
+  .messages-wrapper {
+    padding: 12px 0 8px;
+  }
+  
+  /* Messages */
+  .message-wrapper {
+    max-width: 95%;
+  }
+  
+  .message-content {
+    font-size: 13px;
+    padding: 10px 14px;
+  }
+  
+  .message-avatar {
+    width: 26px;
+    height: 26px;
+    font-size: 9px;
+  }
+  
+  /* Copy button always visible on mobile */
+  .copy-button {
+    opacity: 1;
+  }
+  
+  /* Empty state */
+  .empty-state {
+    padding: 30px 16px;
+  }
+  
+  .empty-state h3 {
+    font-size: 18px;
+  }
+  
+  .suggestion-chips {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .suggestion-chips button {
+    text-align: center;
+  }
+  
+  /* Evidence pane */
+  .evidence-column {
+    max-height: 260px;
+  }
+  
+  .evidence-pane {
+    padding: 12px 14px;
+  }
+  
+  /* Input */
+  .input-wrapper {
+    padding: 4px 4px 4px 14px;
+  }
+  
+  .chat-input {
+    font-size: 13px;
+    padding: 8px 0;
+  }
+  
+  .send-button {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .send-button svg {
+    width: 16px;
+    height: 16px;
+  }
+  
+  .input-footer {
+    font-size: 10px;
+  }
+}
+
+/* Small phones */
+@media (max-width: 480px) {
+  .header-left {
+    gap: 8px;
+  }
+  
+  .logo-container {
+    gap: 8px;
+  }
+  
+  .logo-icon {
+    width: 28px;
+    height: 28px;
+    font-size: 10px;
+  }
+  
+  .logo-container h1 {
+    font-size: 14px;
+  }
+  
+  .logo-container .subtitle {
+    display: none;
+  }
+  
+  .split-layout {
+    padding: 0 8px;
+  }
+  
+  .message-content {
+    font-size: 12px;
+    padding: 8px 12px;
+  }
+  
+  .message-wrapper {
+    max-width: 100%;
+  }
+  
+  .input-wrapper {
+    padding: 2px 2px 2px 12px;
+  }
+  
+  .chat-input {
+    font-size: 12px;
+    padding: 6px 0;
+  }
+  
+  .send-button {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .send-button svg {
+    width: 14px;
+    height: 14px;
+  }
+  
+  .empty-state {
+    padding: 20px 12px;
+  }
+  
+  .empty-state-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 15px;
+  }
+  
+  .empty-state h3 {
+    font-size: 16px;
+  }
+  
+  .empty-state p {
+    font-size: 13px;
+  }
+  
+  .suggestion-chips button {
+    font-size: 12px;
+    padding: 6px 14px;
+  }
+  
+  .evidence-pane {
+    padding: 10px 12px;
+  }
+  
+  .evidence-item .content {
+    font-size: 12px;
+  }
+}
+
+/* Landscape phones */
+@media (max-height: 500px) and (orientation: landscape) {
+  .chat-header {
+    padding: 6px 14px;
+  }
+  
+  .logo-container h1 {
+    font-size: 14px;
+  }
+  
+  .messages-wrapper {
+    padding: 8px 0 4px;
+  }
+  
+  .message-content {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+  
+  .empty-state {
+    padding: 20px 16px;
+  }
+  
+  .empty-state-icon {
+    width: 36px;
+    height: 36px;
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+  
+  .empty-state h3 {
+    font-size: 16px;
+  }
+  
+  .input-form {
+    padding: 0 0 8px 0;
+  }
+  
+  .chat-input {
+    padding: 6px 0;
+  }
+  
+  .send-button {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+/* Large screens */
+@media (min-width: 1400px) {
+  .split-layout {
+    max-width: 1400px;
+  }
+
+  .evidence-column {
+    width: 380px;
+  }
+  
+  .message-content {
+    font-size: 15px;
+    padding: 14px 20px;
+  }
+  
+  .chat-input {
+    font-size: 15px;
+    padding: 12px 0;
+  }
+}
+
+/* Print styles - for saving answers */
+@media print {
+  .sidebar,
+  .chat-header,
+  .input-form,
+  .menu-button,
+  .copy-button {
+    display: none !important;
+  }
+  
+  .main-content {
+    background: white;
+  }
+  
+  .message-content {
+    border: 1px solid #ddd;
+    box-shadow: none;
+  }
+}
