@@ -78,7 +78,7 @@ def ask_question(user_question, chat_history, show_details=False):
     # Step 2: retrieve the most relevant documents.
     retriever = db.as_retriever(search_type="similarity",
                                 search_kwargs={"k": RETRIEVER_K})
-      print("STEP C: searching the document database...", flush=True)
+    print("STEP C: searching the document database...", flush=True)
     docs = retriever.invoke(search_question)
 
     # Breadcrumb D: search done, about to ask Gemini for the final answer
