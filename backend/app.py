@@ -11,6 +11,7 @@ from langchain_chroma import Chroma
 from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_voyageai import VoyageAIEmbeddings
+import voyageai
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -32,7 +33,7 @@ db = Chroma(
     collection_metadata={"hnsw:space": "cosine"},
 )
 model = ChatGoogleGenerativeAI(model=CHAT_MODEL_NAME)
-
+vo_client = voyageai.Client(max_retries=0, timeout=30)
 
 def extract_text(result):
     """Pull the text out of a model response."""
@@ -74,7 +75,16 @@ def ask_question(user_question, chat_history, show_details=False):
         search_question = extract_text(result).strip()
     else:
         search_question = user_question
-    
+
+    print("STEP C: calling Voyage...", flush=True)
+    result = vo_client.embed([search_question], model="voyage-4", input_type="query")
+    query_vector = result.embeddings[0]
+
+    # Half 2: search our local Chroma database using those numbers
+    print("STEP C2: Voyage done, searching local database...", flush=True)
+    docs = db.similarity_search_by_vector(query_vector, k=RETRIEVER_K)
+
+    print(f"STEP D: found {len(docs)} chunks, asking Gemini...", flush=True)
     # Step 2: retrieve the most relevant documents.
     retriever = db.as_retriever(search_type="similarity",
                                 search_kwargs={"k": RETRIEVER_K})
