@@ -51,21 +51,22 @@ def clean_source_name(doc):
     return raw_source.replace("\\", "/").split("/")[-1]   # keep only the file name, drop the folders
 
 def ask_question(user_question, chat_history, show_details=False):
-    """Rewrite (if needed), retrieve, and answer — grounded in the docs."""
-    
-    # Convert chat history from dict format to LangChain message objects
+    # Breadcrumb A: the request made it into our function
+    print("STEP A: question received", flush=True)
+
     messages = []
     for msg in chat_history:
         if msg["role"] == "user":
             messages.append(HumanMessage(content=msg["content"]))
         elif msg["role"] == "assistant":
             messages.append(AIMessage(content=msg["content"]))
-    
-    # Step 1: rewrite the question to be standalone if we have context.
+
     if messages:
+        # Breadcrumb B: about to call Gemini to rewrite the question
+        print("STEP B: rewriting question with Gemini...", flush=True)
         rewrite_messages = [
             SystemMessage(
-                content="Given the chat history, rewrite the new question to be standalone and searchable. Just return the rewritten question."
+                content="Given the chat history, rewrite the new question to be standalone and searchable. Just return the rewritten question,jump straight to answering the question directly without any greeting or filler phrases."
             )
         ] + messages + [HumanMessage(content=f"New question: {user_question}")]
         
@@ -77,7 +78,11 @@ def ask_question(user_question, chat_history, show_details=False):
     # Step 2: retrieve the most relevant documents.
     retriever = db.as_retriever(search_type="similarity",
                                 search_kwargs={"k": RETRIEVER_K})
+    print("STEP C: searching the document database...", flush=True)
     docs = retriever.invoke(search_question)
+
+    # Breadcrumb D: search done, about to ask Gemini for the final answer
+    print(f"STEP D: found {len(docs)} chunks, asking Gemini...", flush=True)
     
     # Prepare retrieval details
     retrieval_details = None
@@ -102,10 +107,24 @@ def ask_question(user_question, chat_history, show_details=False):
     Documents:
     {" ".join([f"- {doc.page_content}" for doc in docs])}
     Please provide a clear, helpful answer using only the information from these documents. If you can't find the answer in the documents, say "I don't have enough information to answer that question based on the provided documents." """
+
     
+    system_prompt="""
+    You are a real-time copilot assisting a phone customer service agent. Your answers will be read ALOUD by the agent to the customer during a live phone call.
+
+Follow these strict rules:
+1. CONCISE & SPOKEN: Keep responses brief, direct, and conversational (2-3 sentences max). Use clear, easy-to-read language.
+2. ACCURACY: Base your answers ONLY on the provided document context and conversation history. Do NOT assume or invent information.
+3. UNKNOWNS: If the context does not contain the answer, explicitly state: "I don't have this information in my records." Suggest a polite way for the agent to inform the customer or ask for clarification.
+4. LANGUAGE & DIALECT:
+   - If the input is in Arabic, respond in conversational, professional Saudi dialect (اللهجة السعودية).
+   - If the input is in English, respond in professional English.
+5. NO UNSPOKEN MARKDOWN: Do not include URLs, code blocks, or inline formatting like bolding or markdown tags that disrupt reading aloud. Use short bullet points only if detailing steps.
+"""
+
     answer_messages = [
         SystemMessage(
-            content="You are a helpful assistant that answers questions based on provided documents and conversation history. if the user's question is written in Arabic, respond in Arabic. use the Saudi dialect. respond in English if the user asks in English"
+            content=system_prompt
         ),
     ] + messages + [
         HumanMessage(content=combined_query)
