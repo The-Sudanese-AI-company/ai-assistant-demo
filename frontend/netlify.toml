@@ -6,8 +6,11 @@
   command = "npm run build"
   publish = "dist"
 
-# Set VITE_API_URL in the Netlify UI (Site settings > Environment variables)
-# to the public URL of the FastAPI backend, e.g. https://onb-api.example.com
+# Public URL of the FastAPI backend on Render. Baked into the bundle at build
+# time by Vite (see src/lib/api.js). No trailing slash, no /api suffix.
+# A variable with the same name set in the Netlify UI takes precedence.
+[build.environment]
+  VITE_API_URL = "https://ai-assistant-demo-zl7a.onrender.com"
 
 # Single-page app: every route serves index.html.
 [[redirects]]

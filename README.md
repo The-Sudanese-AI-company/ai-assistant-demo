@@ -85,9 +85,32 @@ npm run dev
 
 Open http://localhost:3000. In development Vite proxies `/api` to port 8000.
 
-For a deployed build set `VITE_API_URL` to the backend's public URL, then
-`npm run build` (output in `frontend/dist`). `frontend/netlify.toml` is already
-configured for Netlify.
+## Deployment (Netlify + Render)
+
+Frontend: https://swa-rag.netlify.app
+Backend:  https://ai-assistant-demo-zl7a.onrender.com
+
+The two are linked by one variable on each side.
+
+- **Frontend -> backend.** `VITE_API_URL` is baked into the bundle at build
+  time. It is set in `frontend/netlify.toml` under `[build.environment]`, so a
+  normal Netlify deploy from git picks it up with no dashboard config.
+  `frontend/.env.production` carries the same value for a local `npm run build`.
+  After changing it, trigger "Clear cache and deploy site" on Netlify.
+- **Backend -> frontend (CORS).** `ALLOWED_ORIGINS` must contain the Netlify
+  origin. `backend/.env` is gitignored, so Render does not see it: set it in
+  the Render dashboard (service > Environment), along with `VOYAGE_API_KEY`,
+  `GEMINI_API_KEY` and optionally `CHAT_MODEL`:
+
+  ```
+  ALLOWED_ORIGINS=https://swa-rag.netlify.app
+  ```
+
+  No trailing slash. If you add a custom domain later, append it with a comma.
+
+Render's free tier sleeps after 15 minutes idle; the first request afterwards
+can take up to a minute, during which the frontend's health check reports the
+backend as unavailable.
 
 ## Design notes
 

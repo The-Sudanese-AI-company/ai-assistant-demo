@@ -43,8 +43,15 @@ CANDIDATE_K = 8  # chunks fetched before language preference is applied
 FINAL_K = 5  # chunks handed to the model
 PREVIEW_CHARS = 240
 
-# Comma-separated list of allowed browser origins. "*" for the demo.
-ALLOWED_ORIGINS = [o.strip() for o in os.environ.get("ALLOWED_ORIGINS", "*").split(",")]
+# Comma-separated list of allowed browser origins, e.g.
+# ALLOWED_ORIGINS=https://swa-rag.netlify.app,http://localhost:3000
+# Defaults to "*" when unset. Quotes and trailing slashes are tolerated because
+# a browser's Origin header never carries a trailing slash and the match is exact.
+ALLOWED_ORIGINS = [
+    o.strip().strip("'\"").rstrip("/")
+    for o in os.environ.get("ALLOWED_ORIGINS", "*").split(",")
+    if o.strip().strip("'\"")
+]
 
 # Added below the knowledge base's own prompt: this deployment is a copilot
 # for a human agent, so the answer is spoken by the agent, not sent as chat.
