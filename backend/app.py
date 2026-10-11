@@ -8,8 +8,11 @@ Run locally:
     python ingestion.py          # once, builds db/onb_kb from kb_chunks.jsonl
     uvicorn app:app --reload --port 8000
 
-Production (Render, Railway, etc.):
-    gunicorn app:app -k uvicorn.workers.UvicornWorker -b 0.0.0.0:$PORT
+Production (Render, Railway, etc.), run from the backend/ directory:
+    uvicorn app:app --host 0.0.0.0 --port $PORT
+Plain `gunicorn app:app` will NOT work: gunicorn's default worker speaks WSGI
+and FastAPI is ASGI, which fails with
+"FastAPI.__call__() missing 1 required positional argument: 'send'".
 """
 
 import json

@@ -1,0 +1,23 @@
+# Render Blueprint for the ONB Agent Copilot backend.
+# Mirrors the settings the web service needs when created from the dashboard:
+#   Root directory: backend
+#   Build command:  pip install -r requirements.txt
+#   Start command:  uvicorn app:app --host 0.0.0.0 --port $PORT
+services:
+  - type: web
+    name: ai-assistant-demo
+    runtime: python
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11.4"
+      - key: ALLOWED_ORIGINS
+        value: https://swa-rag.netlify.app
+      - key: CHAT_MODEL
+        value: gemini-3.5-flash-lite
+      - key: VOYAGE_API_KEY
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false

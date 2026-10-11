@@ -97,6 +97,17 @@ The two are linked by one variable on each side.
   normal Netlify deploy from git picks it up with no dashboard config.
   `frontend/.env.production` carries the same value for a local `npm run build`.
   After changing it, trigger "Clear cache and deploy site" on Netlify.
+- **Backend start command.** The Render service must run, with root
+  directory `backend`:
+
+  ```
+  uvicorn app:app --host 0.0.0.0 --port $PORT
+  ```
+
+  `gunicorn app:app` on its own fails with
+  `FastAPI.__call__() missing 1 required positional argument: 'send'`
+  because gunicorn's default worker is WSGI and FastAPI is ASGI.
+  `render.yaml` at the repo root holds this config for a Blueprint deploy.
 - **Backend -> frontend (CORS).** `ALLOWED_ORIGINS` must contain the Netlify
   origin. `backend/.env` is gitignored, so Render does not see it: set it in
   the Render dashboard (service > Environment), along with `VOYAGE_API_KEY`,
