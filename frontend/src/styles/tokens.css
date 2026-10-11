@@ -1,0 +1,117 @@
+/* ONB Agent Copilot design tokens
+ *
+ * Brand source: onb-sd.com. One green (#009341), white, neutral text.
+ *
+ * Palette rule: a warm monochrome canvas with hairline structure. Green is
+ * spent only on the primary action, the live status and the verified tag.
+ * Other meaning (confirm, policy, error) uses washed-out pastels so nothing
+ * competes with the brand colour.
+ *
+ * Radius rule: controls 8px, panels and bubbles 12px, the outer sheet 16px,
+ * chips and tags are pills. Nothing else.
+ *
+ * The theme is resolved in JavaScript (system, light or dark) and written to
+ * <html data-theme>, so only the two attribute blocks below exist.
+ */
+:root,
+:root[data-theme='light'] {
+  color-scheme: light;
+
+  /* Brand accent, locked for the whole app */
+  --accent: #009341;
+  --accent-strong: #007a36;
+  --accent-ink: #ffffff;
+  --accent-soft: rgba(0, 147, 65, 0.09);
+  --accent-ring: rgba(0, 147, 65, 0.22);
+
+  /* Warm monochrome surfaces and text */
+  --canvas: #f4f3ef;
+  --surface: #ffffff;
+  --surface-2: #f7f6f3;
+  --surface-3: #efede8;
+  --surface-user: #edf3ec;
+  --bezel: rgba(31, 30, 27, 0.045);
+  --line: rgba(31, 30, 27, 0.07);
+  --line-strong: rgba(31, 30, 27, 0.13);
+  --highlight: rgba(255, 255, 255, 0.9);
+  --ink: #1f1e1b;
+  --ink-2: #5c5953;
+  --ink-3: #8a867e;
+  --ink-placeholder: #9a968e;
+
+  /* Status tags on knowledge base entries */
+  --tag-verified-bg: #edf3ec;
+  --tag-verified-fg: #346538;
+  --tag-confirm-bg: #fbf3db;
+  --tag-confirm-fg: #956400;
+  --tag-policy-bg: #e1f3fe;
+  --tag-policy-fg: #1f6c9f;
+
+  /* Errors */
+  --danger: #9f2f2d;
+  --danger-soft: #fdebec;
+
+  /* Shadows carry the canvas hue, never plain black */
+  --shadow-sheet: 0 1px 2px rgba(31, 30, 27, 0.03), 0 24px 60px -28px rgba(31, 30, 27, 0.14);
+  --shadow-float: 0 1px 2px rgba(31, 30, 27, 0.04), 0 16px 40px -16px rgba(31, 30, 27, 0.22);
+  --shadow-lift: 0 2px 8px rgba(31, 30, 27, 0.04);
+
+  --radius-control: 8px;
+  --radius-panel: 12px;
+  --radius-sheet: 16px;
+  --radius-pill: 999px;
+
+  --font-latin: 'IBM Plex Sans', 'Segoe UI', system-ui, sans-serif;
+  --font-arabic: 'IBM Plex Sans Arabic', 'Segoe UI', system-ui, sans-serif;
+  --font: var(--font-latin), var(--font-arabic);
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'Cascadia Mono', monospace;
+
+  /* Motion: one spring curve for state changes, one settle curve for entry */
+  --ease-spring: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-settle: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur: 260ms;
+  --dur-slow: 520ms;
+
+  --header-h: 64px;
+  --sources-w: 360px;
+  --content-max: 1480px;
+  --shell-gutter: 16px;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  --accent: #35b86b;
+  --accent-strong: #4cc67e;
+  --accent-ink: #07210f;
+  --accent-soft: rgba(53, 184, 107, 0.13);
+  --accent-ring: rgba(53, 184, 107, 0.32);
+
+  --canvas: #121110;
+  --surface: #1a1917;
+  --surface-2: #211f1c;
+  --surface-3: #292724;
+  --surface-user: #1e2b21;
+  --bezel: rgba(255, 250, 240, 0.05);
+  --line: rgba(255, 250, 240, 0.08);
+  --line-strong: rgba(255, 250, 240, 0.14);
+  --highlight: rgba(255, 250, 240, 0.06);
+  --ink: #f1efea;
+  --ink-2: #b8b4ac;
+  --ink-3: #847f77;
+  --ink-placeholder: #726d65;
+
+  --tag-verified-bg: rgba(53, 184, 107, 0.14);
+  --tag-verified-fg: #7fd8a3;
+  --tag-confirm-bg: rgba(224, 168, 74, 0.14);
+  --tag-confirm-fg: #e6b86a;
+  --tag-policy-bg: rgba(94, 170, 230, 0.14);
+  --tag-policy-fg: #8cc4f0;
+
+  --danger: #f08a90;
+  --danger-soft: rgba(240, 138, 144, 0.12);
+
+  --shadow-sheet: 0 1px 2px rgba(0, 0, 0, 0.3), 0 24px 60px -28px rgba(0, 0, 0, 0.6);
+  --shadow-float: 0 1px 2px rgba(0, 0, 0, 0.3), 0 16px 40px -16px rgba(0, 0, 0, 0.6);
+  --shadow-lift: 0 2px 8px rgba(0, 0, 0, 0.25);
+}

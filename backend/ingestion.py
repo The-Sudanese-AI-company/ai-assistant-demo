@@ -1,94 +1,97 @@
-import os 
-from langchain_community.document_loaders import PyPDFLoader,DirectoryLoader,PyMuPDFLoader
-from langchain_chroma import Chroma
-from langchain_text_splitters import CharacterTextSplitter
-from langchain_voyageai import VoyageAIEmbeddings
+"""
+Build the ONB vector store from the knowledge base.
+
+Source: docs/onb-knowledge-base/kb_chunks.jsonl (already chunked, one record
+per topic or FAQ per language). We embed the `text` field and keep every
+other field as metadata, as the knowledge base README asks. Nothing is
+re-split.
+
+Run from the backend folder:
+    python ingestion.py
+"""
+
+import json
+import os
+import shutil
+import sys
+
 from dotenv import load_dotenv
+from langchain_chroma import Chroma
+from langchain_core.documents import Document
+from langchain_voyageai import VoyageAIEmbeddings
 
 load_dotenv()
-voyage_api_key = os.environ.get("VOYAGE_API_KEY")
 
-def load_documents(docs_path = "docs"):
+KB_PATH = os.path.join("docs", "onb-knowledge-base", "kb_chunks.jsonl")
+PERSIST_DIRECTORY = os.path.join("db", "onb_kb")
+COLLECTION_NAME = "onb_kb"
+EMBEDDING_MODEL_NAME = "voyage-4"
 
-    if not os.path.exists(docs_path):
-        raise FileNotFoundError(f"the directory {docs_path} does not exist. Try again and double check if you selected the correct directory")
-    
-    print("="*20)
-    print(f"loading documents from: {docs_path}")
+# Chroma metadata values must be str, int, float or bool. Lists are joined
+# with " | " and nulls become empty strings.
+LIST_FIELDS = ("tags", "sources")
 
-    loader = DirectoryLoader(
-        path=docs_path,
-        glob="*.pdf",
-        loader_cls=PyMuPDFLoader
 
+def load_records(path: str) -> list[dict]:
+    if not os.path.exists(path):
+        raise FileNotFoundError(f"Knowledge base not found at {path}")
+    with open(path, encoding="utf-8") as f:
+        records = [json.loads(line) for line in f if line.strip()]
+    if not records:
+        raise ValueError(f"{path} is empty")
+    return records
+
+
+def to_document(record: dict) -> Document:
+    metadata = {}
+    for key, value in record.items():
+        if key == "text":
+            continue
+        if key in LIST_FIELDS:
+            metadata[key] = " | ".join(value or [])
+        elif value is None:
+            metadata[key] = ""
+        else:
+            metadata[key] = value
+    return Document(page_content=record["text"], metadata=metadata)
+
+
+def build(records: list[dict]) -> Chroma:
+    if os.path.exists(PERSIST_DIRECTORY):
+        print(f"Removing old store at {PERSIST_DIRECTORY}")
+        shutil.rmtree(PERSIST_DIRECTORY)
+
+    docs = [to_document(r) for r in records]
+    ids = [r["id"] for r in records]
+    if len(set(ids)) != len(ids):
+        raise ValueError("Duplicate ids in the knowledge base")
+
+    print(f"Embedding {len(docs)} chunks with {EMBEDDING_MODEL_NAME}")
+    store = Chroma.from_documents(
+        documents=docs,
+        ids=ids,
+        embedding=VoyageAIEmbeddings(model=EMBEDDING_MODEL_NAME),
+        persist_directory=PERSIST_DIRECTORY,
+        collection_name=COLLECTION_NAME,
+        collection_metadata={"hnsw:space": "cosine"},
     )
-    documents = loader.load()
-    if len(documents)==0:
-        raise FileNotFoundError(f"There are no .pdf files in the directory {docs_path}")
-    
-    # for item, doc in enumerate(documents):
-    #     print(f"Document {item}")
-    #     print(f" content length {len(doc.page_content)}")
-    
-    return documents
-
-def create_chunk(documents, chunk_size = 500, overlap=0):
-
-    text_splitter = CharacterTextSplitter(
-        chunk_size=chunk_size,
-        chunk_overlap=overlap
-    )
-
-    chunks = text_splitter.split_documents(documents)
-    
-    # if chunks:
-
-    #     for i, chunk in enumerate(chunks[:5]):
-    #         print(f"\n -- chunk {i+1}--")
-    #         print(f"length: {len(chunk.page_content)} characters")
-    #         print(f"Content:")
-    #         print(chunk.page_content)
-    #         print("-"*50)
-        
-    #     if len(chunks) >5:
-    #         print(f"\n .. and {len(chunks)-5} more chunks")
+    return store
 
 
-    return chunks
+def summarize(records: list[dict]) -> None:
+    from collections import Counter
 
-def create_vectorstore(chunks,persist_directory="db/chroma_db"):
-
-    print(f"Creating the Vectorstore at {persist_directory}")
-
-    embedding_model = VoyageAIEmbeddings(model="voyage-4")
-    vectorstore =Chroma.from_documents(
-        documents=chunks,
-        persist_directory=persist_directory,
-        embedding=embedding_model,
-        collection_metadata={"hnsw:space":"cosine"}
-    )
-
-    return vectorstore
+    print(f"  languages: {dict(Counter(r['lang'] for r in records))}")
+    print(f"  types:     {dict(Counter(r['doc_type'] for r in records))}")
+    print(f"  status:    {dict(Counter(r['status'] for r in records))}")
+    print(f"  version:   {records[0].get('kb_version')}")
 
 
-persistent_directory = "db/chroma_db"
-
-if os.path.exists(persistent_directory):
-    print("vector already exists. no need to create a new vector")
-    embedding_model = VoyageAIEmbeddings(model='voyage-4')
-    vectorstore = Chroma(
-        embedding_function= embedding_model,
-        persist_directory=persistent_directory,
-        collection_metadata={"hnsw:space":"cosine"}
-    )
-    print("loading existing vector")
-
-
-print("Persistent directory does not exist. Initializing vector store ..\n")
-
-
-
-docs=load_documents()
-chunks=create_chunk(docs)
-vectorstore=create_vectorstore(chunks)
-
+if __name__ == "__main__":
+    records = load_records(KB_PATH)
+    print(f"Loaded {len(records)} records from {KB_PATH}")
+    summarize(records)
+    store = build(records)
+    count = store._collection.count()
+    print(f"Done. {count} chunks stored in {PERSIST_DIRECTORY} (collection {COLLECTION_NAME})")
+    sys.exit(0 if count == len(records) else 1)
